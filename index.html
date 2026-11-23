@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FormatShift</title>
+<style>
+:root{--bg:#f3f0ff;--card:rgba(255,255,255,.62);--tx:#1b1740;--mu:#6b668f;--ac:#6c4cff;--ac2:#ff5fa2;--ac3:#22d3ee;--bd:rgba(108,76,255,.22);--ok:#18a874;--o1:rgba(108,76,255,.5);--o2:rgba(255,95,162,.45);--o3:rgba(34,211,238,.4)}
+@media(prefers-color-scheme:dark){:root{--bg:#0a0820;--card:rgba(28,22,66,.55);--tx:#f1eeff;--mu:#a29cd0;--bd:rgba(160,140,255,.25);--o1:rgba(108,76,255,.55);--o2:rgba(255,95,162,.35);--o3:rgba(34,211,238,.3)}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--tx);background:var(--bg);display:flex;justify-content:center;padding:36px 16px;overflow-x:hidden;position:relative}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);z-index:0;pointer-events:none;animation:float 14s ease-in-out infinite}
+.orb.a{width:420px;height:420px;background:var(--o1);top:-120px;left:-100px}
+.orb.b{width:380px;height:380px;background:var(--o2);bottom:-120px;right:-80px;animation-delay:-5s;animation-duration:17s}
+.orb.c{width:260px;height:260px;background:var(--o3);top:45%;left:55%;animation-delay:-9s;animation-duration:20s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,40px) scale(1.15)}66%{transform:translate(-40px,70px) scale(.9)}}
+main{width:100%;max-width:660px;position:relative;z-index:1}
+.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:4px;animation:rise .7s both}
+.logo i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-style:normal;font-size:1.4rem;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 8px 24px rgba(108,76,255,.45);animation:spin 6s ease-in-out infinite}
+@keyframes spin{0%,70%,100%{transform:rotate(0)}85%{transform:rotate(180deg)}}
+h1{font-size:2.5rem;margin:0;letter-spacing:-.03em;background:linear-gradient(90deg,var(--ac),var(--ac2),var(--ac3),var(--ac));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:250% 0}}
+.sub{color:var(--mu);margin:0 0 26px;animation:rise .7s .1s both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.card{background:var(--card);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid var(--bd);border-radius:28px;padding:24px;box-shadow:0 30px 80px rgba(80,50,200,.22),inset 0 1px 0 rgba(255,255,255,.4);animation:rise .8s .2s both}
+.drop{position:relative;border:2px dashed var(--bd);border-radius:22px;padding:42px 16px;text-align:center;cursor:pointer;transition:.3s cubic-bezier(.2,.9,.3,1.3);overflow:hidden}
+.drop::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(108,76,255,.14) 50%,transparent 70%);transform:translateX(-100%);animation:sweep 3.5s ease-in-out infinite}
+@keyframes sweep{60%,100%{transform:translateX(100%)}}
+.drop:hover,.drop.on{border-color:var(--ac);background:rgba(108,76,255,.09);transform:scale(1.02) rotate(-.4deg)}
+.drop.on{border-style:solid;box-shadow:0 0 0 6px rgba(108,76,255,.15)}
+.drop b{display:block;font-size:1.15rem;margin:10px 0 4px;position:relative}.drop span{color:var(--mu);font-size:.9rem;position:relative}
+.ico{font-size:2.8rem;display:inline-block;position:relative;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.files{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.files li{display:flex;justify-content:space-between;gap:10px;padding:11px 14px;border-radius:14px;background:rgba(108,76,255,.1);border:1px solid var(--bd);font-size:.92rem;animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both}
+@keyframes pop{from{opacity:0;transform:translateX(-20px) scale(.92)}to{opacity:1;transform:none}}
+.files em{color:var(--mu);font-style:normal;white-space:nowrap}
+.files span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#fmtBox{animation:rise .5s both}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);margin:24px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--bd);background:rgba(255,255,255,.08);color:var(--tx);padding:11px 20px;border-radius:999px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.25s cubic-bezier(.2,.9,.3,1.5);animation:pop .45s both}
+.chip:nth-child(2){animation-delay:.07s}.chip:nth-child(3){animation-delay:.14s}
+.chip:hover{border-color:var(--ac);transform:translateY(-3px) scale(1.06)}
+.chip:active{transform:scale(.94)}
+.chip.sel{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent;box-shadow:0 8px 22px rgba(108,76,255,.5);transform:scale(1.08)}
+.go{position:relative;width:100%;margin-top:26px;padding:17px;border:0;border-radius:18px;font-size:1.08rem;font-weight:800;color:#fff;background:linear-gradient(90deg,var(--ac),var(--ac2),var(--ac));background-size:200% 100%;cursor:pointer;transition:.25s;overflow:hidden}
+.go:hover:not(:disabled){transform:translateY(-3px);background-position:100% 0;box-shadow:0 14px 34px rgba(108,76,255,.5)}
+.go:active:not(:disabled){transform:scale(.97)}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.go.busy::after{content:"";position:absolute;left:0;bottom:0;height:4px;background:#fff;animation:load 1s ease-in-out infinite}
+@keyframes load{0%{left:0;width:0}50%{width:60%}100%{left:100%;width:0}}
+.note{margin-top:16px;padding:13px 15px;border-radius:14px;background:rgba(255,95,162,.12);border-left:4px solid var(--ac2);font-size:.85rem;color:var(--mu);line-height:1.5;animation:rise .4s both}
+.res{margin-top:18px;display:grid;gap:10px}
+.res a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-radius:16px;background:rgba(24,168,116,.15);border:1px solid rgba(24,168,116,.35);color:var(--tx);text-decoration:none;font-weight:600;font-size:.92rem;transition:.2s;animation:pop .55s cubic-bezier(.2,.9,.3,1.4) both}
+.res a:hover{background:rgba(24,168,116,.28);transform:translateX(6px)}
+.res a i{color:var(--ok);font-style:normal;white-space:nowrap}
+.msg{color:var(--mu);font-size:.92rem;margin-top:14px;text-align:center;min-height:1.2em}
+.foot{text-align:center;color:var(--mu);font-size:.8rem;margin-top:20px;animation:rise .8s .4s both}
+.conf{position:fixed;width:10px;height:14px;z-index:9;pointer-events:none;border-radius:2px;animation:fall 1.4s ease-out forwards}
+@keyframes fall{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.lang{position:fixed;top:16px;right:16px;z-index:20;display:flex;gap:4px;padding:5px;border-radius:999px;background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--bd);box-shadow:0 8px 24px rgba(80,50,200,.2);animation:rise .6s both}
+.lang button{border:0;background:transparent;color:var(--mu);font-weight:800;font-size:.78rem;letter-spacing:.04em;padding:8px 12px;border-radius:999px;cursor:pointer;transition:.25s cubic-bezier(.2,.9,.3,1.4)}
+.lang button:hover{color:var(--tx);transform:scale(1.08)}
+.lang button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 4px 14px rgba(108,76,255,.45)}
+body{padding-top:64px}
+</style>
+</head>
+<body>
+<div class="lang" id="lang"><button data-l="en" class="on">EN</button><button data-l="uk">УКР</button><button data-l="ru">РУС</button></div>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<main>
+  <div class="logo"><i>⚡</i><h1>FormatShift</h1></div>
+  <p class="sub" data-i="sub"></p>
+  <div class="card">
+    <div class="drop" id="drop"><div class="ico">📂</div><b data-i="dropT"></b><span data-i="dropS"></span></div>
+    <input type="file" id="inp" multiple hidden>
+    <ul class="files" id="list"></ul>
+    <div id="fmtBox" hidden><h2 data-i="to"></h2><div class="chips" id="chips"></div></div>
+    <div class="note" id="note" hidden></div>
+    <button class="go" id="go" disableddata-i="go"></button>
+    <div class="msg" id="msg"></div>
+    <div class="res" id="res"></div>
+  </div>
+  <p class="foot" data-i="foot"></p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const MAP={java:['jar','zip'],jar:['zip'],zip:['jar'],png:['jpg','webp','png'],jpg:['png','webp'],jpeg:['png','webp','jpg'],webp:['png','jpg'],gif:['png','jpg','webp'],bmp:['png','jpg','webp'],json:['csv','txt'],csv:['json','txt'],txt:['md','html'],md:['txt','html']};
+const I18N={
+en:{sub:'Convert files right in your browser. Nothing is uploaded to a server.',dropT:'Drop files here',dropS:'or click to choose (.java, .zip, .jar, .png, .jpg, .json, .csv…)',to:'Convert to',go:'Convert',foot:'Everything runs locally — your files never leave your device.',b:'B',kb:'KB',mb:'MB',unsupported:'Conversion for this file type is not supported yet.',conv:'Converting…',done:'Done ✨',err:'Error',errd:'could not convert the file',dl:'Download',noteJar:'A .java file becomes a source JAR: an archive with the source code (package folders respected) and META-INF/MANIFEST.MF. Compiling to .class is not possible in a browser — use javac for a runnable JAR.',arch:'archive'},
+uk:{sub:'Конвертуй файли прямо в браузері. Без завантаження на сервер.',dropT:'Перетягни файли сюди',dropS:'або натисни, щоб вибрати (.java, .zip, .jar, .png, .jpg, .json, .csv…)',to:'Конвертувати в',go:'Конвертувати',foot:'Усе працює локально — файли не залишають твій пристрій.',b:'Б',kb:'КБ',mb:'МБ',unsupported:'Для цього типу файлу конвертація поки не підтримується.',conv:'Конвертую…',done:'Готово ✨',err:'Помилка',errd:'не вдалося конвертувати файл',dl:'Завантажити',noteJar:'З .java створюється source-JAR: архів із вихідним кодом (з урахуванням package) та META-INF/MANIFEST.MF. Компіляція в .class у браузері неможлива — для виконуваного JAR скористайся javac.',arch:'archive'},
+ru:{sub:'Конвертируй файлы прямо в браузере. Без загрузки на сервер.',dropT:'Перетащи файлы сюда',dropS:'или нажми, чтобы выбрать (.java, .zip, .jar, .png, .jpg, .json, .csv…)',to:'Конвертировать в',go:'Конвертировать',foot:'Всё работает локально — файлы не покидают твоё устройство.',b:'Б',kb:'КБ',mb:'МБ',unsupported:'Для этого типа файла конвертация пока не поддерживается.',conv:'Конвертирую…',done:'Готово ✨',err:'Ошибка',errd:'не удалось конвертировать файл',dl:'Скачать',noteJar:'Из .java создаётся source-JAR: архив с исходным кодом (с учётом package) и META-INF/MANIFEST.MF. Компиляция в .class в браузере невозможна — для исполняемого JAR используй javac.',arch:'archive'}};
+let lang='en',noteOn=false,msgKey='',msgExtra='';
+const t=k=>I18N[lang][k];
+function setMsg(k,x){msgKey=k||'';msgExtra=x||'';$('msg').textContent=!k?'':k==='err'?t('err')+': '+(x||t('errd')):t(k)}
+function renderNote(){const n=$('note');n.hidden=!noteOn;if(noteOn)n.textContent=t('noteJar')}
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  document.querySelectorAll('.files em').forEach((e,i)=>e.textContent=size(files[i].size));
+  document.querySelectorAll('.res a span').forEach(e=>e.textContent=e.dataset.n+' · '+size(+e.dataset.b));
+  document.querySelectorAll('.res a i').forEach(e=>e.textContent='⬇ '+t('dl'));
+  renderNote();setMsg(msgKey,msgExtra);
+}
+document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;applyLang()});
+let files=[],target=null;
+const ext=n=>(n.split('.').pop()||'').toLowerCase();
+const base=n=>n.replace(/\.[^.]+$/,'');
+const size=b=>b<1024?b+' '+t('b'):b<1048576?(b/1024).toFixed(1)+' '+t('kb'):(b/1048576).toFixed(1)+' '+t('mb');
+
+const drop=$('drop'),inp=$('inp');
+drop.onclick=()=>inp.click();
+inp.onchange=()=>setFiles([...inp.files]);
+['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('on')}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('on')}));
+drop.addEventListener('drop',ev=>setFiles([...ev.dataTransfer.files]));
+
+function setFiles(fs){
+  files=fs;target=null;$('res').innerHTML='';setMsg('');
+  const l=$('list');l.innerHTML='';
+  fs.forEach(f=>{const li=document.createElement('li');const s=document.createElement('span');s.textContent=f.name;const e=document.createElement('em');e.textContent=size(f.size);li.append(s,e);l.append(li)});
+  const exts=[...new Set(fs.map(f=>ext(f.name)))];
+  let opts=[];
+  if(exts.length===1&&MAP[exts[0]])opts=MAP[exts[0]].filter(x=>x!==exts[0]||['png','jpeg','jpg'].includes(x)&&false);
+  else if(exts.length>1&&exts.every(e=>MAP[e]&&MAP[e].includes('zip')))opts=['zip'];
+  const chips=$('chips');chips.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.className='chip';b.textContent='.'+o;b.onclick=()=>{target=o;[...chips.children].forEach(c=>c.classList.toggle('sel',c===b));$('go').disabled=false;noteOn=(o==='jar'&&exts[0]==='java');renderNote()};chips.append(b)});
+  $('fmtBox').hidden=!fs.length;
+  if(fs.length&&!opts.length)setMsg('unsupported');
+  $('go').disabled=true;noteOn=false;renderNote();
+}
+
+/* ---- ZIP writer (store) ---- */
+const T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc=u=>{let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
+function zip(entries){
+  const enc=new TextEncoder(),parts=[],cd=[];let off=0;
+  const d=new Date(),dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1)),dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate());
+  for(const e of entries){
+    const nm=enc.encode(e.name),c=crc(e.data),sz=e.data.length;
+    const h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,dt,true);h.setUint16(12,dd,true);h.setUint32(14,c,true);h.setUint32(18,sz,true);h.setUint32(22,sz,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);
+    parts.push(new Uint8Array(h.buffer),nm,e.data);
+    const g=new DataView(new ArrayBuffer(46));
+    g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);g.setUint16(10,0,true);g.setUint16(12,dt,true);g.setUint16(14,dd,true);g.setUint32(16,c,true);g.setUint32(20,sz,true);g.setUint32(24,sz,true);g.setUint16(28,nm.length,true);g.setUint32(42,off,true);
+    cd.push(new Uint8Array(g.buffer),nm);
+    off+=30+nm.length+sz;
+  }
+  const cdSize=cd.reduce((a,b)=>a+b.length,0);
+  const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);end.setUint16(8,entries.length,true);end.setUint16(10,entries.length,true);end.setUint32(12,cdSize,true);end.setUint32(16,off,true);
+  return new Blob([...parts,...cd,new Uint8Array(end.buffer)],{type:'application/zip'});
+}
+
+/* ---- converters ---- */
+const buf=async f=>new Uint8Array(await f.arrayBuffer());
+async function javaPath(f){
+  const t=await f.text(),m=t.match(/^\s*package\s+([\w.]+)\s*;/m);
+  return {path:(m?m[1].replace(/\./g,'/')+'/':'')+f.name,data:new TextEncoder().encode(t)};
+}
+async function toArchive(fs,kind){
+  const enc=new TextEncoder(),entries=[];
+  if(kind==='jar')entries.push({name:'META-INF/MANIFEST.MF',data:enc.encode('Manifest-Version: 1.0\r\nCreated-By: FormatShift\r\n\r\n')});
+  for(const f of fs){
+    if(ext(f.name)==='java'){const j=await javaPath(f);entries.push({name:j.path,data:j.data})}
+    else entries.push({name:f.name,data:await buf(f)});
+  }
+  return zip(entries);
+}
+async function convertImage(f,to){
+  const url=URL.createObjectURL(f);
+  const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+  const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
+  const x=c.getContext('2d');
+  if(to==='jpg'){x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height)}
+  x.drawImage(img,0,0);URL.revokeObjectURL(url);
+  const mime={png:'image/png',jpg:'image/jpeg',webp:'image/webp'}[to];
+  return new Promise(ok=>c.toBlob(ok,mime,.92));
+}
+function parseCSV(t){const r=[];let row=[],c='',q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===','){row.push(c);c=''}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(c);c='';r.push(row);row=[]}else c+=ch}
+  if(c||row.length){row.push(c);r.push(row)}return r.filter(r=>r.length>1||r[0]!=='')}
+const esc=s=>/[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+const html=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+async function convertText(f,from,to){
+  const t=await f.text();
+  if(from==='json'&&to==='csv'){
+    let d=JSON.parse(t);if(!Array.isArray(d))d=[d];
+    const keys=[...new Set(d.flatMap(o=>Object.keys(o)))];
+    const rows=[keys.map(esc).join(','),...d.map(o=>keys.map(k=>{const v=o[k];return esc(v==null?'':typeof v==='object'?JSON.stringify(v):String(v))}).join(','))];
+    return new Blob([rows.join('\n')],{type:'text/csv'});
+  }
+  if(from==='csv'&&to==='json'){
+    const r=parseCSV(t),h=r.shift()||[];
+    return new Blob([JSON.stringify(r.map(x=>Object.fromEntries(h.map((k,i)=>[k,x[i]??'']))),null,2)],{type:'application/json'});
+  }
+  if(to==='html')return new Blob([`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${html(base(f.name))}</title></head><body><pre style="white-space:pre-wrap;font:16px/1.6 system-ui;max-width:720px;margin:2rem auto">${html(t)}</pre></body></html>`],{type:'text/html'});
+  return new Blob([t],{type:'text/plain'});
+}
+
+function boom(){const cs=['#6c4cff','#ff5fa2','#22d3ee','#ffd166','#18a874'],r=$('go').getBoundingClientRect();for(let i=0;i<46;i++){const e=document.createElement('div');e.className='conf';e.style.left=(r.left+r.width/2)+'px';e.style.top=(r.top+r.height/2)+'px';e.style.background=cs[i%5];const a=Math.random()*Math.PI*2,d=90+Math.random()*180;e.style.setProperty('--dx',Math.cos(a)*d+'px');e.style.setProperty('--dy',(Math.sin(a)*d-60)+'px');e.style.setProperty('--r',(Math.random()*720-360)+'deg');document.body.append(e);setTimeout(()=>e.remove(),1500)}}
+$('go').onclick=async()=>{
+  if(!target||!files.length)return;
+  const res=$('res');res.innerHTML='';setMsg('conv');$('go').disabled=true;$('go').classList.add('busy');await new Promise(r=>setTimeout(r,500));
+  try{
+    const outs=[];
+    const f0=ext(files[0].name);
+    if(target==='jar'||target==='zip'){
+      if(f0==='zip'&&target==='jar'||f0==='jar'&&target==='zip'){
+        for(const f of files)outs.push({name:base(f.name)+'.'+target,blob:new Blob([await buf(f)],{type:'application/zip'})});
+      }else outs.push({name:(files.length>1?t('arch'):base(files[0].name))+'.'+target,blob:await toArchive(files,target)});
+    }else{
+      for(const f of files){
+        const e=ext(f.name);
+        const blob=['png','jpg','jpeg','webp','gif','bmp'].includes(e)?await convertImage(f,target):await convertText(f,e,target);
+        outs.push({name:base(f.name)+'.'+target,blob});
+      }
+    }
+    outs.forEach(o=>{
+      const a=document.createElement('a');a.href=URL.createObjectURL(o.blob);a.download=o.name;
+      const s=document.createElement('span');s.dataset.n=o.name;s.dataset.b=o.blob.size;s.textContent=o.name+' · '+size(o.blob.size);
+      const i=document.createElement('i');i.textContent='⬇ '+t('dl');a.append(s,i);res.append(a);
+    });
+    setMsg('done');boom();
+  }catch(e){setMsg('err',e.message||'');}
+  $('go').disabled=false;$('go').classList.remove('busy');
+};
+applyLang();
+</script>
+</body>
+</html>
